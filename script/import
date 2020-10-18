@@ -1,0 +1,9 @@
+#!/bin/sh
+
+export $(cat .env)
+
+CONNECTION=$(echo $DATABASE_URL | sed -e 's/postgresql:/postgis:/g')
+
+docker-compose run --rm postgres psql $DATABASE_URL -c "CREATE EXTENSION IF NOT EXISTS hstore"
+docker-compose run --rm imposm import -read /data/data.pbf -write -optimize -deployproduction -config /config/config.json -connection $CONNECTION -overwritecache
+docker-compose run --rm postgres psql $DATABASE_URL < view.sql

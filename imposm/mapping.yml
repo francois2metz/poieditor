@@ -1,0 +1,23 @@
+def_mapping: &poi_mapping
+  shop: ["bicycle"]
+
+def_columns: &poi_columns
+  - {name: 'osm_id', type: id}
+  - {name: 'geom', type: geometry}
+  - {name: 'tags', type: hstore_tags}
+  - {key: 'name',  name: 'name', type: string}
+  - {key: 'shop',  name: 'shop', type: string}
+
+tables:
+  poi_point:
+    type: point
+    mapping: *poi_mapping
+    columns: *poi_columns
+  poi_polygon:
+    type: polygon
+    mapping: *poi_mapping
+    columns: *poi_columns
+
+tags:
+  load_all: true
+  exclude: [created_by, source]

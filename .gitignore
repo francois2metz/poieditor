@@ -1,0 +1,4 @@
+/data
+/front/.nuxt
+/front/node_modules
+.env

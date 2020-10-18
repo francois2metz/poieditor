@@ -1,0 +1,5 @@
+{
+  "cachedir": "/imposm/cache",
+  "diffdir": "/imposm/diff",
+  "mapping": "/config/mapping.yml"
+}
