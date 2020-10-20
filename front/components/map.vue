@@ -1,25 +1,28 @@
 <template>
-  <client-only>
-    <MglMap
-      :map-style="mapStyle"
-      :zoom="13"
-      :center="[2.32, 48.6]"
-      hash="map"
-      class="map"
-    >
-      <MglNavigationControl />
-      <MglGeolocateControl />
-      <MglVectorLayer
-        :layer-id="layer.id"
-        :layer="layer"
-        :source="poiSource"
-        source-id="poi"
-        @mouseenter="mouseenter"
-        @click="clickPoi"
-        @mouseleave="mouseleave"
-      />
-    </MglMap>
-  </client-only>
+  <div>
+    <client-only>
+      <MglMap
+        :map-style="mapStyle"
+        :zoom="13"
+        :center="[2.32, 48.6]"
+        hash="map"
+        class="map"
+      >
+        <MglNavigationControl />
+        <MglGeolocateControl />
+        <MglVectorLayer
+          :layer-id="layer.id"
+          :layer="layer"
+          :source="poiSource"
+          source-id="poi"
+          @mouseenter="mouseenter"
+          @click="clickPoi"
+          @mouseleave="mouseleave"
+        />
+      </MglMap>
+    </client-only>
+    <nuxt-child />
+  </div>
 </template>
 
 <script>
@@ -82,8 +85,8 @@ export default {
     },
 
     clickPoi(e) {
-      const id = e.mapboxEvent.features[0].properties;
-      console.log(id);
+      const id = e.mapboxEvent.features[0].properties.osm_id;
+      this.$router.push({ path: `/poi/${id}` });
     },
   },
 };

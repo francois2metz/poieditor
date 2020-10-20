@@ -59,5 +59,6 @@ export default {
     accessToken: process.env.ACCESS_TOKEN,
     mapStyle: process.env.MAP_STYLE,
     poiSource: process.env.POI_SOURCE,
+    osmConsumerKey: process.env.OSM_CONSUMER_KEY,
   },
 }
