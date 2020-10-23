@@ -1,0 +1,7 @@
+#!/bin/sh
+
+export $(cat .env)
+
+CONNECTION=$(echo $DATABASE_URL | sed -e 's/postgresql:/postgis:/g')
+
+docker-compose run --rm imposm run -config /config/config.json -connection $CONNECTION

@@ -1,5 +1,7 @@
 {
   "cachedir": "/imposm/cache",
   "diffdir": "/imposm/diff",
-  "mapping": "/config/mapping.yml"
+  "mapping": "/config/mapping.yml",
+  "replication_url": "https://planet.openstreetmap.org/replication/minute/",
+  "replication_interval": "1m"
 }
