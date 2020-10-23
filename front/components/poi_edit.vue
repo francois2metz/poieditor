@@ -11,7 +11,7 @@
       </v-btn>
       <v-btn
         icon
-        @click="$emit('save')"
+        @click="$emit('save', dataToSend())"
       >
         <v-icon>mdi-check</v-icon>
       </v-btn>
@@ -55,10 +55,10 @@ export default {
 
   data() {
     return {
-      name: this.tags.name,
-      brand: this.tags.brand.split(';').map(s => s.trim()),
-      website: this.tags.website,
-      phone: this.tags.phone,
+      name: this.tags.name || null,
+      brand: (this.tags.brand || '').split(';').map(s => s.trim()).filter(s => !!s),
+      website: this.tags.website || this.tags['contact:website'] || null,
+      phone: this.tags.phone || this.tags['contact:phone'] || null,
     };
   },
 
@@ -66,6 +66,17 @@ export default {
     brands() {
       return brands.concat(this.brand);
     }
-  }
+  },
+
+  methods: {
+    dataToSend() {
+      return {
+        name: this.name,
+        brand: this.brand.length > 0 ? this.brand.join(';') : null,
+        [this.tags['contact:website'] ? 'contact:website' : 'website']: this.website,
+        [this.tags['contact:phone'] ? 'contact:phone' : 'phone']: this.phone,
+      };
+    },
+  },
 };
 </script>

@@ -20,6 +20,7 @@
     "babel-jest": "^26.5.0",
     "jest": "^26.5.0",
     "mapbox-gl": "^1.12.0",
+    "osm-auth": "^1.1.0",
     "osm-request": "^1.2.10",
     "vue-jest": "^3.0.4",
     "vue-mapbox": "^0.4.1"

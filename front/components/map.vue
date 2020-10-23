@@ -22,6 +22,7 @@
       </MglMap>
     </client-only>
     <nuxt-child />
+    <v-chip @click="save">{{ elements.length }}</v-chip>
   </div>
 </template>
 
@@ -33,6 +34,9 @@ import {
   MglGeolocateControl,
   MglVectorLayer,
 } from 'vue-mapbox/dist/vue-mapbox.umd';
+import { mapState } from 'vuex';
+import OsmAuth from 'osm-auth';
+import OsmRequest from 'osm-request';
 
 export default {
   components: {
@@ -57,13 +61,7 @@ export default {
             'interpolate',
             ['linear'],
             ['zoom'],
-            12, 0,
-            14, 2,
-            15, [
-              'case',
-              ["in", ["get", "status"], ["literal", ["unknown", "partial", "closed"]]], 4,
-              6
-            ],
+            12, 1,
             19, 13
           ]
         }
@@ -75,6 +73,28 @@ export default {
       },
     };
   },
+
+  computed: {
+    ...mapState(['elements']),
+
+    osmAuth() {
+      return OsmAuth({
+        url: this.$config.osmUrl,
+        oauth_consumer_key: this.$config.osmConsumerKey,
+        oauth_secret: this.$config.osmSecret,
+        auto: true,
+      });
+    },
+
+    osmRequest() {
+      return new OsmRequest({
+        endpoint: this.$config.osmUrl,
+        oauthConsumerKey: this.$config.osmConsumerKey,
+        oauthSecret: this.$config.osmSecret,
+      });
+    },
+  },
+
   methods: {
     mouseenter(e) {
       e.map.getCanvas().style.cursor = 'pointer';
@@ -87,6 +107,25 @@ export default {
     clickPoi(e) {
       const id = e.mapboxEvent.features[0].properties.osm_id;
       this.$router.push({ path: `/poi/${id}` });
+    },
+
+    async save() {
+      if (this.osmAuth.authenticated()) {
+        this.saveElements();
+      } else {
+        this.osmAuth.authenticate(async (...args) => {
+          this.saveElements();
+        });
+      }
+    },
+
+    async saveElements() {
+      const changesetId = await this.osmRequest.createChangeset('POIEditor', `Edit ${this.elements.length} bike shops`);
+      this.elements.forEach(async (element) => {
+        await this.osmRequest.sendElement(element, changesetId);
+      });
+      await this.osmRequest.closeChangeset(changesetId);
+      this.$store.commit('clearElements');
     },
   },
 };

@@ -6,6 +6,7 @@
     <poi-edit
       v-if="editing"
       :tags="tags"
+      @save="save"
       @cancel="cancel"
     />
     <poi-view
@@ -24,6 +25,7 @@ export default {
   data() {
     return {
       editing: false,
+      element: null,
       tags: {},
     };
   },
@@ -32,17 +34,19 @@ export default {
     id() {
       return this.$route.params.id;
     },
+
     osm() {
       return new OsmRequest({
-        endpoint: 'https://www.openstreetmap.org',
+        endpoint: this.$config.osmUrl,
         oauthConsumerKey: this.$config.osmConsumerKey,
+        oauthSecret: this.$config.osmSecret,
       });
-    }
+    },
   },
 
   async fetch() {
-    const element = await this.osm.fetchElement(this.id.replace('node', 'node/'));
-    this.tags = this.osm.getTags(element);
+    this.element = await this.osm.fetchElement(this.id.replace('node', 'node/'));
+    this.tags = this.osm.getTags(this.element);
   },
 
   methods: {
@@ -56,9 +60,27 @@ export default {
 
     close() {
       this.$router.push({ path: '/' });
-    }
+    },
+
+    save(data) {
+      const [tagsToRemove, toUpdate] = Object.entries(data).reduce(([toRemove, toUpdate], [key, value]) => {
+        if (value === null || value.trim() === '') {
+          toRemove.push(key);
+        } else {
+          toUpdate[key] = value;
+        }
+        return [toRemove, toUpdate];
+      }, [[], {}]);
+      console.log('tagsToRemove', tagsToRemove, toUpdate);
+      let element = tagsToRemove.reduce((element, tagToRemove) => {
+        return this.osm.removeTag(element, tagToRemove);
+      }, this.element);
+      const newElement = this.osm.setTags(element, toUpdate);
+      this.$store.commit('saveElement', newElement);
+      this.editing = false;
+    },
   },
-}
+};
 </script>
 
 <style scoped>
