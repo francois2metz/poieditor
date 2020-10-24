@@ -68,7 +68,6 @@ export default {
         }
         return [toRemove, toUpdate];
       }, [[], {}]);
-      console.log('tagsToRemove', tagsToRemove, toUpdate);
       let element = tagsToRemove.reduce((element, tagToRemove) => {
         return this.osm.removeTag(element, tagToRemove);
       }, this.element);
