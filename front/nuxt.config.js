@@ -49,8 +49,7 @@ export default {
   build: {
   },
 
-  // Runtime config
-  publicRuntimeConfig: {
+  env: {
     accessToken: process.env.ACCESS_TOKEN,
     mapStyle: process.env.MAP_STYLE,
     poiSource: process.env.POI_SOURCE,

@@ -34,9 +34,9 @@ export default {
 
     osm() {
       return new OsmRequest({
-        endpoint: this.$config.osmUrl,
-        oauthConsumerKey: this.$config.osmConsumerKey,
-        oauthSecret: this.$config.osmSecret,
+        endpoint: process.env.osmUrl,
+        oauthConsumerKey: process.env.osmConsumerKey,
+        oauthSecret: process.env.osmSecret,
       });
     },
   },

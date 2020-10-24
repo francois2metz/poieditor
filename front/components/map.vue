@@ -48,7 +48,7 @@ export default {
 
   data() {
     return {
-      mapStyle: this.$config.mapStyle,
+      mapStyle: process.env.mapStyle,
       layer: {
         id: 'poi',
         type: "circle",
@@ -69,7 +69,7 @@ export default {
       poiSource: {
         minzoom: 12,
         maxzoom: 17,
-        tiles: [`${this.$config.poiSource}/public.poi/{z}/{x}/{y}.pbf`],
+        tiles: [`${process.env.poiSource}/public.poi/{z}/{x}/{y}.pbf`],
       },
     };
   },
@@ -79,18 +79,18 @@ export default {
 
     osmAuth() {
       return OsmAuth({
-        url: this.$config.osmUrl,
-        oauth_consumer_key: this.$config.osmConsumerKey,
-        oauth_secret: this.$config.osmSecret,
+        url: process.env.osmUrl,
+        oauth_consumer_key: process.env.osmConsumerKey,
+        oauth_secret: process.env.osmSecret,
         auto: true,
       });
     },
 
     osmRequest() {
       return new OsmRequest({
-        endpoint: this.$config.osmUrl,
-        oauthConsumerKey: this.$config.osmConsumerKey,
-        oauthSecret: this.$config.osmSecret,
+        endpoint: process.env.osmUrl,
+        oauthConsumerKey: process.env.osmConsumerKey,
+        oauthSecret: process.env.osmSecret,
       });
     },
   },
