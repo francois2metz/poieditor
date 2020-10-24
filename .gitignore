@@ -1,4 +1,5 @@
 /data
 /front/.nuxt
 /front/node_modules
+/front/coverage
 .env
