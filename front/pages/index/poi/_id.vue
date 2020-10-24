@@ -1,8 +1,5 @@
 <template>
-  <v-card
-    light
-    class="sidebar"
-  >
+  <v-card class="sidebar">
     <poi-edit
       v-if="editing"
       :tags="tags"
