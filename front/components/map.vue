@@ -20,7 +20,10 @@
       />
     </MglMap>
     <nuxt-child />
-    <v-chip @click="save">{{ elements.length }}</v-chip>
+    <v-chip
+      class="contributions-count"
+      @click="save"
+    >{{ elements.length }}</v-chip>
   </div>
 </template>
 
@@ -143,5 +146,13 @@ export default {
 .map >>> .mapboxgl-map {
   width: 100vw;
   height: 500vh;
+}
+.map >>> .mapboxgl-ctrl-top-right {
+  top: 50px;
+}
+.contributions-count {
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 </style>
