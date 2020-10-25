@@ -42,7 +42,7 @@ export default {
   },
 
   async fetch() {
-    this.element = await this.osm.fetchElement(this.id.replace('node', 'node/'));
+    this.element = await this.osm.fetchElement(this.id.replace(':', '/'));
     this.tags = this.osm.getTags(this.element);
   },
 
