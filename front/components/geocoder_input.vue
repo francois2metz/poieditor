@@ -5,15 +5,14 @@
     :loading="isLoading"
     :search-input.sync="search"
     :error="!!error"
-    placeholder="Search"
     autofocus
     hide-no-data
     hide-details
     no-filter
+    clearable
+    placeholder="Search"
     background-color="white"
-    prepend-inner-icon="osm-magnify"
-    @blur="$emit('blur')"
-    class="autocomplete-big"
+    prepend-inner-icon="mdi-magnify"
   >
     <template v-slot:item="{ item }">
       <v-list-item-content>
