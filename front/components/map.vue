@@ -1,26 +1,24 @@
 <template>
   <div>
-    <client-only>
-      <MglMap
-        :map-style="mapStyle"
-        :zoom="13"
-        :center="[2.32, 48.6]"
-        hash="map"
-        class="map"
-      >
-        <MglNavigationControl />
-        <MglGeolocateControl />
-        <MglVectorLayer
-          :layer-id="layer.id"
-          :layer="layer"
-          :source="poiSource"
-          source-id="poi"
-          @mouseenter="mouseenter"
-          @click="clickPoi"
-          @mouseleave="mouseleave"
-        />
-      </MglMap>
-    </client-only>
+    <MglMap
+      :map-style="mapStyle"
+      :zoom.sync="zoom"
+      :center.sync="center"
+      hash="map"
+      class="map"
+    >
+      <MglNavigationControl />
+      <MglGeolocateControl />
+      <MglVectorLayer
+        :layer-id="layer.id"
+        :layer="layer"
+        :source="poiSource"
+        source-id="poi"
+        @mouseenter="mouseenter"
+        @click="clickPoi"
+        @mouseleave="mouseleave"
+      />
+    </MglMap>
     <nuxt-child />
     <v-chip @click="save">{{ elements.length }}</v-chip>
   </div>
@@ -71,6 +69,8 @@ export default {
         maxzoom: 17,
         tiles: [`${process.env.poiSource}/public.poi/{z}/{x}/{y}.pbf`],
       },
+      zoom: 13,
+      center: [2.32, 48.6],
     };
   },
 
