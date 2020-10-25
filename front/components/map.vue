@@ -136,8 +136,8 @@ export default {
 
     async saveElements() {
       const changesetId = await this.osmRequest.createChangeset('POIEditor', `Edit ${this.elements.length} bike shops`);
-      await (this.elements.forEach(async (element) => {
-        await this.osmRequest.sendElement(element, changesetId);
+      await Promise.all(this.elements.map((element) => {
+        return this.osmRequest.sendElement(element, changesetId);
       }));
       await this.osmRequest.closeChangeset(changesetId);
       this.$store.commit('clearElements');
