@@ -19,6 +19,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^26.5.0",
     "jest": "^26.5.0",
+    "lodash.debounce": "^4.0.8",
     "mapbox-gl": "^1.12.0",
     "osm-auth": "^1.1.0",
     "osm-request": "^1.2.10",

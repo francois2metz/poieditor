@@ -6,6 +6,7 @@
       :center.sync="center"
       hash="map"
       class="map"
+      @load="load"
     >
       <MglNavigationControl />
       <MglGeolocateControl />
@@ -20,6 +21,9 @@
       />
     </MglMap>
     <nuxt-child />
+    <v-toolbar class="toolbar ml-5 mt-5">
+      <geocoder-input @select="select" />
+    </v-toolbar>
     <v-chip
       class="contributions-count"
       @click="save"
@@ -99,6 +103,10 @@ export default {
   },
 
   methods: {
+    load({ map }) {
+      this.map = map;
+    },
+
     mouseenter(e) {
       e.map.getCanvas().style.cursor = 'pointer';
     },
@@ -110,6 +118,10 @@ export default {
     clickPoi(e) {
       const id = e.mapboxEvent.features[0].properties.osm_id;
       this.$router.push({ path: `/poi/${id}` });
+    },
+
+    select(bbox) {
+      this.map.fitBounds(bbox, { duration: 0 });
     },
 
     async save() {
@@ -145,7 +157,7 @@ export default {
 }
 .map >>> .mapboxgl-map {
   width: 100vw;
-  height: 500vh;
+  height: 100vh;
 }
 .map >>> .mapboxgl-ctrl-top-right {
   top: 50px;
@@ -154,5 +166,9 @@ export default {
   position: absolute;
   right: 10px;
   top: 10px;
+}
+.toolbar {
+  position: absolute;
+  z-index: 4;
 }
 </style>
