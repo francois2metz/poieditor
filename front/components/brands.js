@@ -67,4 +67,5 @@ export default [
 "Xtracycle",
 "XYZ Cargo",
 "Yuba",
+"Triobike",
 ];
