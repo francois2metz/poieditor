@@ -41,12 +41,16 @@ export default {
     },
   },
 
-  async fetch() {
-    this.element = await this.osm.fetchElement(this.id.replace(':', '/'));
-    this.tags = this.osm.getTags(this.element);
+  fetch() {
+    this.fetchElement();
   },
 
   methods: {
+    async fetchElement() {
+      this.element = await this.osm.fetchElement(this.id.replace(':', '/'));
+      this.tags = this.osm.getTags(this.element);
+    },
+
     edit() {
       this.editing = true;
     },
@@ -75,6 +79,12 @@ export default {
       this.$store.commit('saveElement', newElement);
       this.editing = false;
     },
+  },
+
+  watch: {
+    id() {
+      this.fetchElement();
+    }
   },
 };
 </script>
