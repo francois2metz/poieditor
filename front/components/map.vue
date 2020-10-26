@@ -47,6 +47,9 @@ import {
 import { mapState } from 'vuex';
 import OsmAuth from 'osm-auth';
 import OsmRequest from 'osm-request';
+import debounce from 'lodash.debounce';
+
+const SETTINGS_STORAGE = 'settings';
 
 export default {
   components: {
@@ -57,6 +60,7 @@ export default {
   },
 
   data() {
+    const { center, zoom } = this.restoreSavedPosition();
     return {
       mapStyle: process.env.mapStyle,
       layer: {
@@ -81,8 +85,8 @@ export default {
         maxzoom: 17,
         tiles: [`${process.env.poiSource}/public.poi/{z}/{x}/{y}.pbf`],
       },
-      zoom: 13,
-      center: [2.32, 48.6],
+      zoom,
+      center,
       saving: false,
     };
   },
@@ -139,6 +143,33 @@ export default {
       this.map.fitBounds(bbox, { duration: 0 });
     },
 
+    restoreSavedPosition() {
+      const settings = this.getSavedSettings();
+      if (settings) {
+        return settings.position;
+      } else {
+        return {
+          zoom: 13,
+          center: [2.32, 48.6],
+        };
+      }
+    },
+
+    getSavedSettings() {
+      try {
+        const settings = localStorage.getItem(SETTINGS_STORAGE);
+        if (settings) {
+          return JSON.parse(settings);
+        }
+      } catch (e) {}
+    },
+
+    savePosition: debounce(function() {
+      const position = { zoom: this.zoom, center: this.center };
+      const settings = JSON.stringify({ position });
+      localStorage.setItem(SETTINGS_STORAGE, settings);
+    }, 1000),
+
     async save() {
       if (this.osmAuth.authenticated()) {
         this.saveElements();
@@ -158,6 +189,16 @@ export default {
       await this.osmRequest.closeChangeset(changesetId);
       this.$store.commit('clearElements');
       this.saving = false;
+    },
+  },
+
+  watch: {
+    zoom() {
+      this.savePosition();
+    },
+
+    center() {
+      this.savePosition();
     },
   },
 };
