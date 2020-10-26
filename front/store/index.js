@@ -3,8 +3,14 @@ export const state = () => ({
 })
 
 export const mutations = {
-  saveElement(state, element) {
-    state.elements.push(element);
+  saveElement(state, newElement) {
+    const previousIndex = state.elements.findIndex((element) => {
+      return element._type === newElement._type && element._id === newElement._id;
+    });
+    if (previousIndex !== -1) {
+      state.elements.splice(previousIndex, 1);
+    }
+    state.elements.push(newElement);
   },
 
   clearElements(state) {

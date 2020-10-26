@@ -17,6 +17,7 @@
 
 <script>
 import OsmRequest from 'osm-request';
+import { mapState } from 'vuex';
 
 export default {
   data() {
@@ -28,6 +29,8 @@ export default {
   },
 
   computed: {
+    ...mapState(['elements']),
+
     id() {
       return this.$route.params.id;
     },
@@ -47,8 +50,19 @@ export default {
 
   methods: {
     async fetchElement() {
-      this.element = await this.osm.fetchElement(this.id.replace(':', '/'));
+      this.element = await (this.findPreviouslyEditedElement() || this.fetchRemoteElement());
       this.tags = this.osm.getTags(this.element);
+    },
+
+    findPreviouslyEditedElement() {
+      const [type, id] = this.id.split(':');
+      return this.elements.find((element) => {
+        return element._type === type && element._id === id;
+      });
+    },
+
+    fetchRemoteElement() {
+      return this.osm.fetchElement(this.id.replace(':', '/'));
     },
 
     edit() {
@@ -78,6 +92,7 @@ export default {
       const newElement = this.osm.setTags(element, toUpdate);
       this.$store.commit('saveElement', newElement);
       this.editing = false;
+      this.fetchElement();
     },
   },
 
