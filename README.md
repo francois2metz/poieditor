@@ -12,7 +12,7 @@ Copy `.env.template` to `.env`:
 
     cp .env{.template,}
 
-Edit the .env and fill the required key ([jawg][] access token and the [OpenStreetMap oauth application][osm-oauth].
+Edit the .env and fill the required key ([jawg][] access token and the [OpenStreetMap oauth application][osm-oauth]).
 
 To start the import:
 
