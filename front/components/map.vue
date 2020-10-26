@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ 'sidebar-opened': $route.name !== 'index' }">
     <MglMap
       :map-style="mapStyle"
       :zoom.sync="zoom"
@@ -170,5 +170,8 @@ export default {
 .toolbar {
   position: absolute;
   z-index: 4;
+}
+.sidebar-opened .toolbar {
+  transform: translateX(400px);
 }
 </style>
