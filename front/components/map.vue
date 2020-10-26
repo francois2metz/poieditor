@@ -102,6 +102,15 @@ export default {
     },
   },
 
+  mounted() {
+    window.addEventListener('beforeunload', (event) => {
+      if (this.elements.length > 0) {
+        event.preventDefault();
+        event.returnValue = '';
+      }
+    });
+  },
+
   methods: {
     load({ map }) {
       this.map = map;
