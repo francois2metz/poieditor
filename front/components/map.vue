@@ -24,10 +24,15 @@
     <v-toolbar class="toolbar ml-5 mt-5">
       <geocoder-input @select="select" />
     </v-toolbar>
-    <v-chip
+    <v-btn
+      :loading="saving"
+      :disabled="saving || elements.length === 0"
       class="contributions-count"
       @click="save"
-    >{{ elements.length }}</v-chip>
+    >
+      <v-icon>mdi-cloud-upload</v-icon>
+      {{ elements.length }}
+    </v-btn>
   </div>
 </template>
 
@@ -78,6 +83,7 @@ export default {
       },
       zoom: 13,
       center: [2.32, 48.6],
+      saving: false,
     };
   },
 
@@ -144,12 +150,14 @@ export default {
     },
 
     async saveElements() {
+      this.saving = true;
       const changesetId = await this.osmRequest.createChangeset('POIEditor', `Edit ${this.elements.length} bike shops`);
       await Promise.all(this.elements.map((element) => {
         return this.osmRequest.sendElement(element, changesetId);
       }));
       await this.osmRequest.closeChangeset(changesetId);
       this.$store.commit('clearElements');
+      this.saving = false;
     },
   },
 };
