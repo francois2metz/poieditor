@@ -11,6 +11,8 @@
       <MglNavigationControl />
       <MglGeolocateControl />
       <MglVectorLayer
+        v-for="layer in layers"
+        :key="layer.id"
         :layer-id="layer.id"
         :layer="layer"
         :source="poiSource"
@@ -60,23 +62,45 @@ export default {
     const { center, zoom } = this.restoreSavedPosition();
     return {
       mapStyle: process.env.mapStyle,
-      layer: {
-        id: 'poi',
-        type: "circle",
-        'source-layer': 'public.poi',
-        paint: {
-          'circle-color': 'white',
-          'circle-stroke-width': 3,
-          'circle-stroke-color': '#FAA300',
-          'circle-radius': [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            12, 1,
-            19, 13
-          ]
+      layers: [
+        {
+          id: 'poi',
+          type: 'circle',
+          'source-layer': 'public.poi',
+          paint: {
+            'circle-color': 'white',
+            'circle-stroke-width': 3,
+            'circle-stroke-color': '#FAA300',
+            'circle-radius': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              12, 1,
+              19, 13
+            ]
+          }
+        },
+        {
+          id: 'text',
+          type: 'symbol',
+          'source-layer': 'public.poi',
+          layout: {
+            'text-field': ['get', 'name'],
+            'text-offset': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              12, ['literal', [0, 0.3]],
+              19, ['literal', [0, 1.5]]
+            ],
+            'text-anchor': 'top',
+            'text-size': 12
+          },
+          paint: {
+            'text-color': '#666',
+          },
         }
-      },
+      ],
       poiSource: {
         minzoom: 12,
         maxzoom: 17,
