@@ -1,6 +1,7 @@
 export const state = () => ({
-  elements: []
-})
+  elements: [],
+  place: null,
+});
 
 export const mutations = {
   saveElement(state, newElement) {
@@ -15,5 +16,9 @@ export const mutations = {
 
   clearElements(state) {
     state.elements.splice(0, state.elements.length);
-  }
-}
+  },
+
+  setPlace(state, place) {
+    state.place = place;
+  },
+};

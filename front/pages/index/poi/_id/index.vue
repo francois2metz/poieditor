@@ -48,10 +48,16 @@ export default {
     this.fetchElement();
   },
 
+  beforeDestroy() {
+    this.$store.commit('setPlace', null);
+  },
+
   methods: {
     async fetchElement() {
       this.element = await (this.findPreviouslyEditedElement() || this.fetchRemoteElement());
       this.tags = this.osm.getTags(this.element);
+      const { lat, lon } = this.element.$;
+      this.$store.commit('setPlace', { lat, lon });
     },
 
     findPreviouslyEditedElement() {

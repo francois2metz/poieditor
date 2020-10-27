@@ -19,6 +19,11 @@
         @click="clickPoi"
         @mouseleave="mouseleave"
       />
+      <MglMarker
+        v-if="place"
+        :key="place.lat + place.lon"
+        :coordinates="[ place.lon, place.lat ]"
+      />
     </MglMap>
     <nuxt-child />
     <v-toolbar class="toolbar ml-5 mt-5">
@@ -31,20 +36,23 @@
 <script>
 import 'mapbox-gl/dist/mapbox-gl.css';
 import {
-  MglMap,
-  MglNavigationControl,
   MglGeolocateControl,
+  MglMap,
+  MglMarker,
+  MglNavigationControl,
   MglVectorLayer,
 } from 'vue-mapbox/dist/vue-mapbox.umd';
 import debounce from 'lodash.debounce';
+import { mapState } from 'vuex';
 
 const SETTINGS_STORAGE = 'settings';
 
 export default {
   components: {
-    MglMap,
-    MglNavigationControl,
     MglGeolocateControl,
+    MglMap,
+    MglMarker,
+    MglNavigationControl,
     MglVectorLayer,
   },
 
@@ -78,6 +86,8 @@ export default {
       center,
     };
   },
+
+  computed: mapState(['place']),
 
   methods: {
     load({ map }) {
