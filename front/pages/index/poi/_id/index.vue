@@ -52,6 +52,14 @@ export default {
     this.$store.commit('setPlace', null);
   },
 
+  beforeRouteUpdate(to, from, next) {
+    this.preventLeavingIfEditing(next);
+  },
+
+  beforeRouteLeave(to, from, next) {
+    this.preventLeavingIfEditing(next);
+  },
+
   methods: {
     async fetchElement() {
       this.element = await (this.findPreviouslyEditedElement() || this.fetchRemoteElement());
@@ -69,6 +77,14 @@ export default {
 
     fetchRemoteElement() {
       return this.osm.fetchElement(this.id.replace(':', '/'));
+    },
+
+    preventLeavingIfEditing(next) {
+      let result = true;
+      if (this.editing) {
+        result = window.confirm('Do you really want to cancel your edit?');
+      }
+      next(result);
     },
 
     edit() {
