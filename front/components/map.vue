@@ -24,15 +24,7 @@
     <v-toolbar class="toolbar ml-5 mt-5">
       <geocoder-input @select="select" />
     </v-toolbar>
-    <v-btn
-      :loading="saving"
-      :disabled="saving || elements.length === 0"
-      class="contributions-count"
-      @click="save"
-    >
-      <v-icon>mdi-cloud-upload</v-icon>
-      {{ elements.length }}
-    </v-btn>
+    <upload-osm />
   </div>
 </template>
 
@@ -44,9 +36,6 @@ import {
   MglGeolocateControl,
   MglVectorLayer,
 } from 'vue-mapbox/dist/vue-mapbox.umd';
-import { mapState } from 'vuex';
-import OsmAuth from 'osm-auth';
-import OsmRequest from 'osm-request';
 import debounce from 'lodash.debounce';
 
 const SETTINGS_STORAGE = 'settings';
@@ -87,38 +76,7 @@ export default {
       },
       zoom,
       center,
-      saving: false,
     };
-  },
-
-  computed: {
-    ...mapState(['elements']),
-
-    osmAuth() {
-      return OsmAuth({
-        url: process.env.osmUrl,
-        oauth_consumer_key: process.env.osmConsumerKey,
-        oauth_secret: process.env.osmSecret,
-        auto: true,
-      });
-    },
-
-    osmRequest() {
-      return new OsmRequest({
-        endpoint: process.env.osmUrl,
-        oauthConsumerKey: process.env.osmConsumerKey,
-        oauthSecret: process.env.osmSecret,
-      });
-    },
-  },
-
-  mounted() {
-    window.addEventListener('beforeunload', (event) => {
-      if (this.elements.length > 0) {
-        event.preventDefault();
-        event.returnValue = '';
-      }
-    });
   },
 
   methods: {
@@ -169,27 +127,6 @@ export default {
       const settings = JSON.stringify({ position });
       localStorage.setItem(SETTINGS_STORAGE, settings);
     }, 1000),
-
-    async save() {
-      if (this.osmAuth.authenticated()) {
-        this.saveElements();
-      } else {
-        this.osmAuth.authenticate(async (...args) => {
-          this.saveElements();
-        });
-      }
-    },
-
-    async saveElements() {
-      this.saving = true;
-      const changesetId = await this.osmRequest.createChangeset('POIEditor', `Edit ${this.elements.length} bike shops`);
-      await Promise.all(this.elements.map((element) => {
-        return this.osmRequest.sendElement(element, changesetId);
-      }));
-      await this.osmRequest.closeChangeset(changesetId);
-      this.$store.commit('clearElements');
-      this.saving = false;
-    },
   },
 
   watch: {
