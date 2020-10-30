@@ -44,6 +44,22 @@ export default {
     },
   },
 
+  mounted() {
+    this.beforeUnload = () => {
+      this.preventLeavingIfEditing((result) => {
+        if (!result) {
+          event.preventDefault();
+          event.returnValue = '';
+        }
+      });
+    };
+    window.addEventListener('beforeunload', this.beforeUnload);
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('beforeunload', this.beforeUnload);
+  },
+
   fetch() {
     this.fetchElement();
   },
