@@ -84,7 +84,7 @@ export default {
         .finally(() => {
           this.isLoading = false;
         });
-    }, 350, { maxWait: 500 }),
+    }, 500, { maxWait: 1000 }),
     selected(val) {
       if (Array.isArray(val)) {
         this.$emit('select', val);
