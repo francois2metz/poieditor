@@ -13,26 +13,13 @@ export default {
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
     ],
-    __dangerouslyDisableSanitizers: ['script'],
     script: [
       {
-        hid: 'gauges',
-        innerHTML: `
-          var _gauges = _gauges || [];
-          (function() {
-            var t   = document.createElement('script');
-            t.type  = 'text/javascript';
-            t.async = true;
-            t.id    = 'gauges-tracker';
-            t.setAttribute('data-site-id', '5f8ae036e5db5e12890cfe60');
-            t.setAttribute('data-track-path', 'https://track.gaug.es/track.gif');
-            t.src = 'https://d2fuc4clr7gvcn.cloudfront.net/track.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(t, s);
-          })();
-        `,
-        type: 'text/javascript',
-        charset: 'utf-8'
+        hid: 'plausible',
+        src: 'https://plausible.io/js/plausible.js',
+        async: true,
+        defer: true,
+        'data-domain': 'poieditor.2metz.fr',
       }
     ],
   },
